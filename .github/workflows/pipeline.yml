@@ -1,10 +1,13 @@
-name: Pipeline con Seguridad
+name: Pipeline con Deploy
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    #  Paso 3 — Añadir entorno
+    environment: production
 
     steps:
       - name: Descargar código
@@ -16,12 +19,11 @@ jobs:
       - name: Ejecutar tests
         run: npm test
 
-      #  MALA PRÁCTICA (NO HACER)
-      - name: Login inseguro
-        run: echo "password=123456"
+      #  Paso 1 — Crear paso deploy (general)
+      - name: Deploy
+        run: echo "Desplegando aplicación..."
 
-      #  BUENA PRÁCTICA (SECRETS)
-      - name: Uso seguro
-        run: echo " Token cargado correctamente"
-        env:
-          TOKEN: ${{ secrets.TOKEN_API }}
+      #  Paso 2 — Solo si todo ha ido bien
+      - name: Deploy producción
+        if: success()
+        run: echo " Deploy en producción OK"
