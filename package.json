@@ -1,7 +1,7 @@
 {
   "name": "proyecto-e2e",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ejercicio de gestión de entornos",
   "main": "index.js",
   "scripts": {
     "test": "jest"
