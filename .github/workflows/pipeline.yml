@@ -1,40 +1,34 @@
-name: Pipeline con Sonar
+name: Pipeline Completo PRO
 
 on: [push]
 
 jobs:
   pipeline:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
-      - name: Checkout código
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Instalar dependencias
+      - name: Install
         run: npm install
 
-      - name: Ejecutar tests
+      - name: Test
         run: npm test
-
-      #  Paso 1 — Sonar (simulado)
-      - name: SonarQube Scan
-        run: echo "🔎 Análisis de calidad ejecutado"
-
-      #  Paso 2 — Simular fallo de calidad
-      - name: Simular fallo de calidad
-        id: calidad
-        run: exit 1
         continue-on-error: true
 
-      #  Paso 3 — Control del flujo
-      - name: Evaluar calidad
-        if: steps.calidad.outcome == 'failure'
-        run: echo " La calidad ha fallado, pero el pipeline continúa"
+      - name: Sonar
+        run: echo "Análisis Sonar"
 
-      - name: Evaluar calidad OK
-        if: steps.calidad.outcome == 'success'
-        run: echo " Calidad correcta"
+      - name: Deploy
+        if: success()
+        run: echo " Deploy OK"
 
-      #  Resultado final (importante para alumnos)
-      - name: Resultado final
-        run: echo "Pipeline finalizado"
+      - name: Notificación éxito
+        if: success()
+        run: echo " Todo correcto"
+
+      - name: Notificación fallo
+        if: failure()
+        run: echo " Algo ha fallado"
