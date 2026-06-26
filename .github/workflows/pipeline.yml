@@ -1,4 +1,4 @@
-name: Pipeline con Deploy
+name: Pipeline Multi-Jobs
 
 on: [push]
 
@@ -6,24 +6,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    #  Paso 3 — Añadir entorno
-    environment: production
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
 
     steps:
-      - name: Descargar código
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm test
 
-      - name: Instalar dependencias
-        run: npm install
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
 
-      - name: Ejecutar tests
-        run: npm test
-
-      #  Paso 1 — Crear paso deploy (general)
-      - name: Deploy
-        run: echo "Desplegando aplicación..."
-
-      #  Paso 2 — Solo si todo ha ido bien
-      - name: Deploy producción
-        if: success()
-        run: echo " Deploy en producción OK"
+    steps:
+      - run: echo " Deploy ejecutado"
