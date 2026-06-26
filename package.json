@@ -1,12 +1,11 @@
 {
-  "name": "proyecto-entornos",
+  "name": "proyecto-entornos-avanzado",
   "version": "1.0.0",
-  "description": "Ejercicio de gestión de entornos",
+  "description": "Pipeline con entornos DEV TEST PROD",
   "main": "sum.js",
   "scripts": {
     "test": "jest"
   },
-  "dependencies": {},
   "devDependencies": {
     "jest": "^29.0.0"
   }
