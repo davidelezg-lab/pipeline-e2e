@@ -1,27 +1,49 @@
-name: Pipeline Multi-Jobs
+name: Pipeline Entornos DEV-TEST-PROD
 
 on: [push]
 
 jobs:
-  build:
+  #  ENTORNO DEV
+  dev:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
+      - name: Checkout código
+        uses: actions/checkout@v3
 
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Tests en DEV
+        run: npm test
+
+      - name: Deploy en DEV
+        run: echo " Deploy en DEV"
+
+  # ✅ ENTORNO TEST
   test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: dev
 
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm test
+      - name: Checkout código
+        uses: actions/checkout@v3
 
-  deploy:
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Deploy en TEST
+        run: echo " Deploy en TEST"
+
+  #  ENTORNO PRODUCCIÓN
+  prod:
     runs-on: ubuntu-latest
     needs: test
 
+    #  entorno protegido (nivel real empresa)
+    environment: production
+
     steps:
-      - run: echo " Deploy ejecutado"
+      - name: Deploy en PROD
+        run: echo " Deploy en PROD"
+``
