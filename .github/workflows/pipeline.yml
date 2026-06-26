@@ -1,4 +1,4 @@
-name: Pipeline Completo PRO
+name: Pipeline Control Test + Deploy
 
 on: [push]
 
@@ -8,27 +8,37 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Install
+      - name: Instalar dependencias
         run: npm install
 
-      - name: Test
+      #  TEST (NO detiene pipeline)
+      - name: Ejecutar tests
+        id: test_step
         run: npm test
         continue-on-error: true
 
-      - name: Sonar
-        run: echo "Análisis Sonar"
+      #  INFORMAR resultado del test (didáctico)
+      - name: Resultado del test OK
+        if: steps.test_step.outcome == 'success'
+        run: echo " Tests correctos"
 
-      - name: Deploy
+      - name: Resultado del test FALLIDO
+        if: steps.test_step.outcome == 'failure'
+        run: echo " Tests fallidos"
+
+      #  DEPLOY SOLO SI TODO OK
+      - name: Deploy producción
         if: success()
-        run: echo " Deploy OK"
+        run: echo " Deploy en producción realizado"
 
+      #  NOTIFICACIONES
       - name: Notificación éxito
         if: success()
-        run: echo " Todo correcto"
+        run: echo " Pipeline OK"
 
       - name: Notificación fallo
         if: failure()
-        run: echo " Algo ha fallado"
+        run: echo " Pipeline con errores"
