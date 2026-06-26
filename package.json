@@ -1,7 +1,7 @@
 {
-  "name": "proyecto-sonar",
+  "name": "pipeline-test-control",
   "version": "1.0.0",
-  "description": "Pipeline con análisis de calidad",
+  "description": "Pipeline con control de fallo de test",
   "main": "sum.js",
   "scripts": {
     "test": "jest"
