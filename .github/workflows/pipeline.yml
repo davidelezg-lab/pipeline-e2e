@@ -20,8 +20,8 @@ jobs:
         run: npm test
 
       - name: Mostrar entorno
-        run: echo "Entorno: $ENVIRONMENT"
+        run: echo "Entorno actual:${{ env.ENVIRONMENT }}"
 
       - name: Paso solo en producción
-        if: env.ENVIRONMENT == 'prod'
+        if: ${{ env.ENVIRONMENT == 'prod' }}
         run: echo " Desplegando en producción..."
