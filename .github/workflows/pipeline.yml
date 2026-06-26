@@ -1,13 +1,10 @@
-name: Pipeline con Entornos
+name: Pipeline con Seguridad
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      ENVIRONMENT: dev   # ← CAMBIAR A prod EN EL PASO 4
 
     steps:
       - name: Descargar código
@@ -19,17 +16,12 @@ jobs:
       - name: Ejecutar tests
         run: npm test
 
-      - name: Mostrar entorno
-        run: echo "Entorno actual:${{ env.ENVIRONMENT }}"
+      #  MALA PRÁCTICA (NO HACER)
+      - name: Login inseguro
+        run: echo "password=123456"
 
-      - name: Paso solo en producción
-        if: ${{ env.ENVIRONMENT == 'prod' }}
-        run: echo " Desplegando en producción..."
-
-      - name: Notificación éxito
-        if: success()
-        run: echo " Pipeline correcto"
-
-      - name: Notificación fallo
-        if: failure()
-        run: echo " Pipeline fallido"
+      #  BUENA PRÁCTICA (SECRETS)
+      - name: Uso seguro
+        run: echo " Token cargado correctamente"
+        env:
+          TOKEN: ${{ secrets.TOKEN_API }}
