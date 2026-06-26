@@ -1,10 +1,9 @@
-name: Pipeline Entornos DEV-TEST-PROD
+name: Pipeline con Sonar
 
 on: [push]
 
 jobs:
-  #  ENTORNO DEV
-  dev:
+  pipeline:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,35 +13,28 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Tests en DEV
+      - name: Ejecutar tests
         run: npm test
 
-      - name: Deploy en DEV
-        run: echo " Deploy en DEV"
+      #  Paso 1 — Sonar (simulado)
+      - name: SonarQube Scan
+        run: echo "🔎 Análisis de calidad ejecutado"
 
-  # ✅ ENTORNO TEST
-  test:
-    runs-on: ubuntu-latest
-    needs: dev
+      #  Paso 2 — Simular fallo de calidad
+      - name: Simular fallo de calidad
+        id: calidad
+        run: exit 1
+        continue-on-error: true
 
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v3
+      #  Paso 3 — Control del flujo
+      - name: Evaluar calidad
+        if: steps.calidad.outcome == 'failure'
+        run: echo " La calidad ha fallado, pero el pipeline continúa"
 
-      - name: Instalar dependencias
-        run: npm install
+      - name: Evaluar calidad OK
+        if: steps.calidad.outcome == 'success'
+        run: echo " Calidad correcta"
 
-      - name: Deploy en TEST
-        run: echo " Deploy en TEST"
-
-  #  ENTORNO PRODUCCIÓN
-  prod:
-    runs-on: ubuntu-latest
-    needs: test
-
-    #  entorno protegido (nivel real empresa)
-    environment: production
-
-    steps:
-      - name: Deploy en PROD
-        run: echo " Deploy en PROD"
+      #  Resultado final (importante para alumnos)
+      - name: Resultado final
+        run: echo "Pipeline finalizado"
