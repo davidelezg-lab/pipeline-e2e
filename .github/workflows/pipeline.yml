@@ -25,3 +25,11 @@ jobs:
       - name: Paso solo en producción
         if: ${{ env.ENVIRONMENT == 'prod' }}
         run: echo " Desplegando en producción..."
+
+      - name: Notificación éxito
+        if: success()
+        run: echo " Pipeline correcto"
+
+      - name: Notificación fallo
+        if: failure()
+        run: echo " Pipeline fallido"
